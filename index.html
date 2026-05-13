@@ -54,17 +54,18 @@
 
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
 
+    // =========================
     // CONFIG FIREBASE
+    // =========================
     const firebaseConfig = {
         apiKey: "TON_API_KEY",
         authDomain: "TON_PROJET.firebaseapp.com",
-        databaseURL: "https://TON_PROJET.firebaseio.com",
+        databaseURL: "https://TON_PROJET-default-rtdb.firebaseio.com",
         projectId: "TON_PROJET",
         storageBucket: "TON_PROJET.appspot.com",
         messagingSenderId: "XXXX",
@@ -75,14 +76,23 @@
 
     const database = firebase.database();
 
-    // Objet des votes
+    // =========================
+    // MOT DE PASSE RESULTATS
+    // =========================
+    const RESULT_PASSWORD = "SuperVote123";
+
+    // =========================
+    // STOCKAGE LOCAL DES VOTES
+    // =========================
     let votes = {
         Alice: 0,
         Bob: 0,
         Charlie: 0
     };
 
-    // Synchronisation en temps réel
+    // =========================
+    // SYNCHRONISATION TEMPS REEL
+    // =========================
     database.ref("votes").on("value", (snapshot) => {
 
         const data = snapshot.val();
@@ -95,20 +105,27 @@
 
     });
 
-    // Envoi du vote
+    // =========================
+    // ENVOI DU VOTE
+    // =========================
     document.getElementById("voteForm").addEventListener("submit", function(e) {
 
         e.preventDefault();
 
+        // Récupère les cases cochées
         const selected = Array.from(
             document.querySelectorAll('input[name="vote"]:checked')
         ).map(el => el.value);
 
+        // Vérifie qu’au moins une personne est cochée
         if (selected.length === 0) {
+
             alert("Choisis au moins une personne");
             return;
+
         }
 
+        // Ajoute les votes
         selected.forEach(person => {
 
             const currentVotes = votes[person] || 0;
@@ -119,31 +136,37 @@
 
         // Décocher après vote
         document.querySelectorAll('input[name="vote"]').forEach(el => {
+
             el.checked = false;
+
         });
 
         alert("Merci pour ton vote !");
 
     });
 
-    // Afficher résultats
+    // =========================
+    // AFFICHER LES RESULTATS
+    // =========================
     function showResults() {
 
         const code = document.getElementById("accessCode").value;
 
-        if (code === "SuperVote123") {
-
-            document.getElementById("resultsContent").innerHTML = `
-                <p>Alice : ${votes.Alice || 0} votes</p>
-                <p>Bob : ${votes.Bob || 0} votes</p>
-                <p>Charlie : ${votes.Charlie || 0} votes</p>
-            `;
-
-        } else {
+        // Vérification du mot de passe
+        if (code !== RESULT_PASSWORD) {
 
             alert("Code incorrect !");
+            return;
 
         }
+
+        // Affichage des votes
+        document.getElementById("resultsContent").innerHTML = `
+            <p>Alice : <strong>${votes.Alice || 0}</strong> votes</p>
+            <p>Bob : <strong>${votes.Bob || 0}</strong> votes</p>
+            <p>Charlie : <strong>${votes.Charlie || 0}</strong> votes</p>
+        `;
+
     }
 
 </script>
