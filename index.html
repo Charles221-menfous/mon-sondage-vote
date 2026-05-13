@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vote pour ton favori</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .vote-form { margin-bottom: 20px; }
+        .results { margin-top: 20px; padding: 10px; background: #f0f0f0;  }
+    </style>
+</head>
+<body>
+    <h1>Vote pour ton favori</h1>
+    <form class="vote-form" id="voteForm">
+        <p>Coche la personne pour laquelle tu veux voter :</p>
+        <input type="checkbox" id="person1" name="vote" value="Alice">
+        <label for="person1">Alice</label><br>
+        <input type="checkbox" id="person2" name="vote" value="Bob">
+        <label for="person2">Bob</label><br>
+        <input type="checkbox" id="person3" name="vote" value="Charlie">
+        <label for="person3">Charlie</label><br>
+        <button type="submit">Voter</button>
+    </form>
+
+    <div class="results" id="results">
+        <h2>Résultats</h2>
+        <p>Code d'accès : <input type="password" id="accessCode" placeholder="Entrez le code"></p>
+        <button onclick="showResults()">Voir les résultats</button>
+        <div id="resultsContent"></div>
+    </div>
+
+    <script>
+        // Stockage des votes (en mémoire, à remplacer par une base de données pour un vrai site)
+        let votes = { Alice: 0, Bob: 0, Charlie: 0 };
+
+        document.getElementById('voteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const selected = Array.from(document.querySelectorAll('input[name="vote"]:checked')).map(el => el.value);
+            selected.forEach(person => votes[person]++);
+            alert("Merci pour ton vote !");
+        });
+
+        function showResults() {
+            const code = document.getElementById('accessCode').value;
+            if (code === "MONCODESECRET") { // Remplacez par votre code
+                document.getElementById('resultsContent').innerHTML =
+                    `<p>Alice : ${votes.Alice} votes</p>
+                     <p>Bob : ${votes.Bob} votes</p>
+                     <p>Charlie : ${votes.Charlie} votes</p>`;
+                document.getElementById('results').style.display = "block";
+            } else {
+                alert("Code incorrect !");
+            }
+        }
+
+         // ... (le reste du code)
+    function showResults() {
+        const code = document.getElementById('accessCode').value;
+        if (code === "MONCODESECRET") { // <-- Remplace MONCODESECRET par ton mot de passe
+            document.getElementById('resultsContent').innerHTML =
+                `<p>Alice : ${votes.Alice} votes</p>
+                 <p>Bob : ${votes.Bob} votes</p>
+                 <p>Charlie : ${votes.Charlie} votes</p>`;
+            document.getElementById('results').style.display = "block";
+        } else {
+            alert("Code incorrect !");
+        }
+    }
+    </script>
+</body>
+</html>
