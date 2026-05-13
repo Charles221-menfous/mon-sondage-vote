@@ -57,24 +57,25 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+
+
+
 <script>
 
-    // =========================
-    // CONFIG FIREBASE
-    // =========================
-    const firebaseConfig = {
-        apiKey: "TON_API_KEY",
-        authDomain: "TON_PROJET.firebaseapp.com",
-        databaseURL: "https://TON_PROJET-default-rtdb.firebaseio.com",
-        projectId: "TON_PROJET",
-        storageBucket: "TON_PROJET.appspot.com",
-        messagingSenderId: "XXXX",
-        appId: "XXXX"
-    };
+  // 🔥 CONFIG FIREBASE (à remplacer par la tienne)
+  const firebaseConfig = {
+    apiKey: "TON_API_KEY",
+    authDomain: "TON_PROJET.firebaseapp.com",
+    databaseURL: "https://TON_PROJET-default-rtdb.firebaseio.com",
+    projectId: "TON_PROJET",
+    storageBucket: "TON_PROJET.appspot.com",
+    messagingSenderId: "XXXX",
+    appId: "XXXX"
+  };
 
-    firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
 
-    const database = firebase.database();
 
     // =========================
     // MOT DE PASSE RESULTATS
