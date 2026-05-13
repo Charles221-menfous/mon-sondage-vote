@@ -65,6 +65,53 @@
             alert("Code incorrect !");
         }
     }
+</script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+  // Configuration Firebase (à remplacer par la tienne)
+  const firebaseConfig = {
+    apiKey: "...",
+    authDomain: "...",
+    databaseURL: "https://[nom-de-ton-projet].firebaseio.com",
+    projectId: "...",
+    storageBucket: "...",
+    messagingSenderId: "...",
+    appId: "..."
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  // Charger les votes depuis Firebase
+  database.ref('votes').on('value', (snapshot) => {
+    const data = snapshot.val() || { Alice: 0, Bob: 0, Charlie: 0 };
+    votes = data;
+  });
+
+  document.getElementById('voteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const selected = Array.from(document.querySelectorAll('input[name="vote"]:checked')).map(el => el.value);
+    selected.forEach(person => {
+      votes[person] = (votes[person] || 0) + 1;
+      database.ref('votes/' + person).set(votes[person]);
+    });
+    alert("Merci pour ton vote !");
+  });
+
+  function showResults() {
+    const code = document.getElementById('accessCode').value;
+    if (code === "SuperVote123") {
+      document.getElementById('resultsContent').innerHTML =
+        `<p>Alice : ${votes.Alice || 0} votes</p>
+         <p>Bob : ${votes.Bob || 0} votes</p>
+         <p>Charlie : ${votes.Charlie || 0} votes</p>`;
+    } else {
+      alert("Code incorrect !");
+    }
+  }
+
+  
     </script>
 </body>
 </html>
