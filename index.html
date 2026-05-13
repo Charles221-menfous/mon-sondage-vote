@@ -2,174 +2,149 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vote en ligne</title>
+<title>Vote pour ton favori</title>
 
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        padding: 20px;
+        margin: 20px;
     }
 
-    .container {
-        max-width: 500px;
-        margin: auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-        text-align: center;
-    }
-
-    button {
-        margin-top: 15px;
-        padding: 10px 20px;
-        cursor: pointer;
+    .vote-form {
+        margin-bottom: 20px;
     }
 
     .results {
         margin-top: 20px;
-        padding: 15px;
-        background: #eee;
-        border-radius: 10px;
-    }
-
-    label {
-        font-size: 18px;
+        padding: 10px;
+        background: #f0f0f0;
     }
 </style>
 </head>
+
 <body>
 
-<div class="container">
+<h1>Vote pour ton favori</h1>
 
-    <h1>Vote pour ton favori</h1>
+<form class="vote-form" id="voteForm">
 
-    <form id="voteForm">
+    <p>Coche la personne pour laquelle tu veux voter :</p>
 
-        <input type="radio" name="vote" value="Alice" required>
-        <label>Alice</label><br><br>
+    <input type="checkbox" id="person1" name="vote" value="Alice">
+    <label for="person1">Alice</label><br>
 
-        <input type="radio" name="vote" value="Bob">
-        <label>Bob</label><br><br>
+    <input type="checkbox" id="person2" name="vote" value="Bob">
+    <label for="person2">Bob</label><br>
 
-        <input type="radio" name="vote" value="Charlie">
-        <label>Charlie</label><br><br>
+    <input type="checkbox" id="person3" name="vote" value="Charlie">
+    <label for="person3">Charlie</label><br><br>
 
-        <button type="submit">Voter</button>
+    <button type="submit">Voter</button>
 
-    </form>
+</form>
 
-    <div class="results">
+<div class="results">
 
-        <h2>Résultats</h2>
+    <h2>Résultats</h2>
 
-        <input type="password" id="code" placeholder="Code d'accès">
+    <input type="password" id="accessCode" placeholder="Entrez le code">
+    <button onclick="showResults()">Voir les résultats</button>
 
-        <button onclick="showResults()">Voir les résultats</button>
-
-        <div id="resultsContent"></div>
-
-    </div>
+    <div id="resultsContent"></div>
 
 </div>
 
 <!-- Firebase -->
-<script type="module">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+<script>
 
-import {
-    getDatabase,
-    ref,
-    get,
-    set,
-    update
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    // CONFIG FIREBASE
+    const firebaseConfig = {
+        apiKey: "TON_API_KEY",
+        authDomain: "TON_PROJET.firebaseapp.com",
+        databaseURL: "https://TON_PROJET.firebaseio.com",
+        projectId: "TON_PROJET",
+        storageBucket: "TON_PROJET.appspot.com",
+        messagingSenderId: "XXXX",
+        appId: "XXXX"
+    };
 
+    firebase.initializeApp(firebaseConfig);
 
-// CONFIG FIREBASE
-const firebaseConfig = {
-    apiKey: "TON_API_KEY",
-    authDomain: "TON_PROJET.firebaseapp.com",
-    databaseURL: "https://TON_PROJET-default-rtdb.firebaseio.com",
-    projectId: "TON_PROJET",
-    storageBucket: "TON_PROJET.appspot.com",
-    messagingSenderId: "XXXXXXXX",
-    appId: "XXXXXXXX"
-};
+    const database = firebase.database();
 
-// Initialisation
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    // Objet des votes
+    let votes = {
+        Alice: 0,
+        Bob: 0,
+        Charlie: 0
+    };
 
-// Création des votes si inexistants
-const votesRef = ref(db, "votes");
+    // Synchronisation en temps réel
+    database.ref("votes").on("value", (snapshot) => {
 
-async function initVotes() {
+        const data = snapshot.val();
 
-    const snapshot = await get(votesRef);
+        if (data) {
+            votes = data;
+        }
 
-    if (!snapshot.exists()) {
+        console.log("Votes synchronisés :", votes);
 
-        await set(votesRef, {
-            Alice: 0,
-            Bob: 0,
-            Charlie: 0
+    });
+
+    // Envoi du vote
+    document.getElementById("voteForm").addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        const selected = Array.from(
+            document.querySelectorAll('input[name="vote"]:checked')
+        ).map(el => el.value);
+
+        if (selected.length === 0) {
+            alert("Choisis au moins une personne");
+            return;
+        }
+
+        selected.forEach(person => {
+
+            const currentVotes = votes[person] || 0;
+
+            database.ref("votes/" + person).set(currentVotes + 1);
+
         });
 
+        // Décocher après vote
+        document.querySelectorAll('input[name="vote"]').forEach(el => {
+            el.checked = false;
+        });
+
+        alert("Merci pour ton vote !");
+
+    });
+
+    // Afficher résultats
+    function showResults() {
+
+        const code = document.getElementById("accessCode").value;
+
+        if (code === "SuperVote123") {
+
+            document.getElementById("resultsContent").innerHTML = `
+                <p>Alice : ${votes.Alice || 0} votes</p>
+                <p>Bob : ${votes.Bob || 0} votes</p>
+                <p>Charlie : ${votes.Charlie || 0} votes</p>
+            `;
+
+        } else {
+
+            alert("Code incorrect !");
+
+        }
     }
-}
-
-initVotes();
-
-
-// Vote
-document.getElementById("voteForm").addEventListener("submit", async function(e) {
-
-    e.preventDefault();
-
-    const selected = document.querySelector('input[name="vote"]:checked').value;
-
-    const snapshot = await get(votesRef);
-
-    const votes = snapshot.val();
-
-    votes[selected]++;
-
-    await update(votesRef, votes);
-
-    alert("Merci pour ton vote !");
-
-    this.reset();
-
-});
-
-
-// Voir résultats
-window.showResults = async function() {
-
-    const code = document.getElementById("code").value;
-
-    if (code !== "SuperVote123") {
-        alert("Code incorrect !");
-        return;
-    }
-
-    const snapshot = await get(votesRef);
-
-    const votes = snapshot.val();
-
-    document.getElementById("resultsContent").innerHTML = `
-        <p><strong>Alice :</strong> ${votes.Alice} votes</p>
-        <p><strong>Bob :</strong> ${votes.Bob} votes</p>
-        <p><strong>Charlie :</strong> ${votes.Charlie} votes</p>
-    `;
-};
 
 </script>
 
