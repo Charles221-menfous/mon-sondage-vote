@@ -9,7 +9,7 @@
         margin: 20px;
         max-width: 600px;
         margin: 0 auto;
-        background-color: pink;
+        background-color: yellow;
 
     }
     .vote-section {
@@ -133,25 +133,17 @@ function demanderCode() {
         return;
     }
 
-    // 🔥 1. reset Firebase
-    votesRef.remove()
-        .then(() => {
+    // 🔥 Firebase reset
+    votesRef.remove();
 
-            // 🧹 2. reset localStorage COMPLET (important)
-            localStorage.clear();
+    // 🧹 suppression TOTALE du navigateur
+    localStorage.clear();
 
-         localStorage.getItem("voteReine")
-         localStorage.getItem("voteRoi")   
-        
-            document.getElementById("resultsContent").innerHTML = "";
+    // 🧼 reset affichage
+    document.getElementById("resultsContent").innerHTML = "";
 
-            // 🔄 4. recharge la page pour reset total du JS
-            location.reload();
-
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    // 🔄 force reset total JS
+    location.reload();
 }
 </script>
 
@@ -209,7 +201,7 @@ document.getElementById("voteRoiForm").addEventListener("submit", function(e) {
     }
     const candidate = selected.value;
     console.log("Envoi du vote pour le Roi :", candidate); // <-- Ajoute ça
-    if (localStorage.getItem("votedRoi")) {
+  if (localStorage.getItem("votedROI") === "true") {
         alert("Tu as déjà voté pour le Roi !");
         return;
     }
@@ -235,7 +227,7 @@ document.getElementById("voteReineForm").addEventListener("submit", function(e) 
     }
     const candidate = selected.value;
     console.log("Envoi du vote pour le Reine :", candidate); // <-- Ajoute ça
-    if (localStorage.getItem("votedReine")) {
+    if (localStorage.getItem("votedReine") === "true") {
         alert("Tu as déjà voté pour le Reine !");
         return;
     }
