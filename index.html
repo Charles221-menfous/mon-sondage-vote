@@ -9,6 +9,7 @@
         margin: 20px;
         max-width: 600px;
         margin: 0 auto;
+        background-color: violet;
     }
     .vote-section {
         margin-bottom: 30px;
@@ -124,48 +125,58 @@ const firebaseConfig = {
       console.log("Votes Reine:", reineVotes);
   });
 
-  // 🗳️ Gestion du vote pour le Roi
-  document.getElementById("voteRoiForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const selected = document.querySelector('input[name="roi"]:checked');
-      if (!selected) {
-          alert("Choisis un candidat pour le Roi !");
-          return;
-      }
-      const candidate = selected.value;
-      if (localStorage.getItem("votedRoi")) {
-          alert("Tu as déjà voté pour le Roi !");
-          return;
-      }
-      roiRef.child(candidate).transaction((current) => {
-          return (current || 0) + 1;
-      });
-      localStorage.setItem("votedRoi", "true");
-      alert("Merci pour ton vote pour le Roi !");
-      selected.checked = false;
-  });
 
-  // 🗳️ Gestion du vote pour la Reine
-  document.getElementById("voteReineForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const selected = document.querySelector('input[name="reine"]:checked');
-      if (!selected) {
-          alert("Choisis une candidate pour la Reine !");
-          return;
-      }
-      const candidate = selected.value;
-      if (localStorage.getItem("votedReine")) {
-          alert("Tu as déjà voté pour la Reine !");
-          return;
-      }
-      reineRef.child(candidate).transaction((current) => {
-          return (current || 0) + 1;
-      });
-      localStorage.setItem("votedReine", "true");
-      alert("Merci pour ton vote pour la Reine !");
-      selected.checked = false;
-  });
 
+// Dans la gestion du vote pour le Roi
+document.getElementById("voteRoiForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const selected = document.querySelector('input[name="roi"]:checked');
+    if (!selected) {
+        alert("Choisis un candidat pour le Roi !");
+        return;
+    }
+    const candidate = selected.value;
+    console.log("Envoi du vote pour le Roi :", candidate); // <-- Ajoute ça
+    if (localStorage.getItem("votedRoi")) {
+        alert("Tu as déjà voté pour le Roi !");
+        return;
+    }
+    roiRef.child(candidate).transaction((current) => {
+        console.log("Transaction pour", candidate, ":", current, "->", (current || 0) + 1); // <-- Ajoute ça
+        return (current || 0) + 1;
+    });
+    localStorage.setItem("votedRoi", "true");
+    alert("Merci pour ton vote pour le Roi !");
+    selected.checked = false;
+});
+
+
+    
+
+  // Dans la gestion du vote pour le Roi
+document.getElementById("voteReineForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const selected = document.querySelector('input[name="reine"]:checked');
+    if (!selected) {
+        alert("Choisis un candidat pour le Reine !");
+        return;
+    }
+    const candidate = selected.value;
+    console.log("Envoi du vote pour le Reine :", candidate); // <-- Ajoute ça
+    if (localStorage.getItem("votedReine")) {
+        alert("Tu as déjà voté pour le Reine !");
+        return;
+    }
+    roiRef.child(candidate).transaction((current) => {
+        console.log("Transaction pour", candidate, ":", current, "->", (current || 0) + 1); // <-- Ajoute ça
+        return (current || 0) + 1;
+    });
+    localStorage.setItem("votedReine", "true");
+    alert("Merci pour ton vote pour le Reine !");
+    selected.checked = false;
+});
+
+    
   // 📊 Affichage des résultats
   function showResults() {
       const code = document.getElementById("accessCode").value;
