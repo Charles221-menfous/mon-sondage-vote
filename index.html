@@ -9,7 +9,7 @@
         margin: 20px;
         max-width: 600px;
         margin: 0 auto;
-        background-color: red;
+        background-color: blue;
 
     }
     .vote-section {
@@ -133,17 +133,23 @@ function demanderCode() {
         return;
     }
 
-    votesRef.remove().then(() => {
+    // 🔥 1. reset Firebase
+    votesRef.remove()
+        .then(() => {
 
-        // 🧹 VRAI reset complet navigateur
-        localStorage.removeItem("votedRoi");
-        localStorage.removeItem("votedReine");
+            // 🧹 2. reset localStorage COMPLET (important)
+            localStorage.clear();
 
-        // 🧼 vide l’écran
-        document.getElementById("resultsContent").innerHTML = "";
+            // 🧼 3. reset interface
+            document.getElementById("resultsContent").innerHTML = "";
 
-        alert("Votes réinitialisés !");
-    });
+            // 🔄 4. recharge la page pour reset total du JS
+            location.reload();
+
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }
 </script>
 
