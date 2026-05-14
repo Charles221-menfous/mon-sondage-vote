@@ -9,7 +9,7 @@
         margin: 20px;
         max-width: 600px;
         margin: 0 auto;
-        background-color: violet;
+        background-color: red;
 
     }
     .vote-section {
@@ -133,22 +133,17 @@ function demanderCode() {
         return;
     }
 
-    // 🔥 Supprime tous les votes Firebase
-    votesRef.remove()
-        .then(() => {
+    votesRef.remove().then(() => {
 
-            // 🧹 Supprime les votes locaux
-            localStorage.removeItem("votedRoi");
-            localStorage.removeItem("votedReine");
+        // 🧹 VRAI reset complet navigateur
+        localStorage.removeItem("votedRoi");
+        localStorage.removeItem("votedReine");
 
-            // 🧼 Vide l'affichage des résultats
-            document.getElementById("resultsContent").innerHTML = "";
+        // 🧼 vide l’écran
+        document.getElementById("resultsContent").innerHTML = "";
 
-            alert("Votes réinitialisés !");
-        })
-        .catch((error) => {
-            console.error("Erreur reset Firebase :", error);
-        });
+        alert("Votes réinitialisés !");
+    });
 }
 </script>
 
