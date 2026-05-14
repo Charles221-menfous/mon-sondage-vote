@@ -44,7 +44,7 @@
 
     .reini{
 padding: 40px;
-margin: 40px
+margin: 40px;
 
     }
 
@@ -128,19 +128,27 @@ function demanderCode() {
 
     const code = prompt("Entrez le code secret :");
 
-    // Code secret
-    if (code === "1234") {
-
-        // Supprime la trace du vote
-        localStorage.clear();
-
-        alert("Votes réinitialisés !");
-
-    } else {
-
+    if (code !== "1234") {
         alert("Code incorrect.");
-
+        return;
     }
+
+    // 🔥 Supprime tous les votes Firebase
+    votesRef.remove()
+        .then(() => {
+
+            // 🧹 Supprime les votes locaux
+            localStorage.removeItem("votedRoi");
+            localStorage.removeItem("votedReine");
+
+            // 🧼 Vide l'affichage des résultats
+            document.getElementById("resultsContent").innerHTML = "";
+
+            alert("Votes réinitialisés !");
+        })
+        .catch((error) => {
+            console.error("Erreur reset Firebase :", error);
+        });
 }
 </script>
 
@@ -259,3 +267,4 @@ document.getElementById("voteReineForm").addEventListener("submit", function(e) 
 
 </body>
 </html>
+
