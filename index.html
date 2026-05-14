@@ -2,174 +2,189 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Vote pour ton favori</title>
-
+<title>Vote pour le Roi et la Reine du Bal</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
+        max-width: 600px;
+        margin: 0 auto;
     }
-
-    .vote-form {
-        margin-bottom: 20px;
+    .vote-section {
+        margin-bottom: 30px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
     }
-
     .results {
         margin-top: 20px;
-        padding: 10px;
+        padding: 15px;
         background: #f0f0f0;
+        border-radius: 5px;
+    }
+    button {
+        padding: 8px 15px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #45a049;
+    }
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+    #resultsContent p {
+        margin: 5px 0;
     }
 </style>
 </head>
-
 <body>
 
-<h1>Vote pour ton favori</h1>
+<h1>Vote pour le Roi et la Reine du Bal</h1>
 
-<form class="vote-form" id="voteForm">
-
-    <p>Coche la personne pour laquelle tu veux voter :</p>
-
-    <input type="checkbox" id="person1" name="vote" value="Alice">
-    <label for="person1">Alice</label><br>
-
-    <input type="checkbox" id="person2" name="vote" value="Bob">
-    <label for="person2">Bob</label><br>
-
-    <input type="checkbox" id="person3" name="vote" value="Charlie">
-    <label for="person3">Charlie</label><br><br>
-
-    <button type="submit">Voter</button>
-
-</form>
-
-<div class="results">
-
-    <h2>Résultats</h2>
-
-    <input type="password" id="accessCode" placeholder="Entrez le code">
-    <button onclick="showResults()">Voir les résultats</button>
-
-    <div id="resultsContent"></div>
-
+<!-- Section Vote Roi -->
+<div class="vote-section">
+    <h2>Vote pour le Roi</h2>
+    <form id="voteRoiForm">
+        <p>Choisis ton candidat :</p>
+        <input type="radio" id="roiAlice" name="roi" value="Alice">
+        <label for="roiAlice">Alice</label><br>
+        <input type="radio" id="roiBob" name="roi" value="Bob">
+        <label for="roiBob">Bob</label><br>
+        <input type="radio" id="roiCharlie" name="roi" value="Charlie">
+        <label for="roiCharlie">Charlie</label><br><br>
+        <button type="submit">Voter pour le Roi</button>
+    </form>
 </div>
 
+<!-- Section Vote Reine -->
+<div class="vote-section">
+    <h2>Vote pour la Reine</h2>
+    <form id="voteReineForm">
+        <p>Choisis ta candidate :</p>
+        <input type="radio" id="reineAlice" name="reine" value="Alice">
+        <label for="reineAlice">Alice</label><br>
+        <input type="radio" id="reineBob" name="reine" value="Bob">
+        <label for="reineBob">Bob</label><br>
+        <input type="radio" id="reineCharlie" name="reine" value="Charlie">
+        <label for="reineCharlie">Charlie</label><br><br>
+        <button type="submit">Voter pour la Reine</button>
+    </form>
+</div>
+
+<!-- Section Résultats -->
+<div class="results">
+    <h2>Résultats</h2>
+    <input type="password" id="accessCode" placeholder="Entrez le code">
+    <button onclick="showResults()">Voir les résultats</button>
+    <div id="resultsContent"></div>
+</div>
+
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-
-
-
 <script>
+  // 🔥 CONFIG FIREBASE (remplace par TES valeurs)
+const firebaseConfig = {
+  apiKey: "AIzaSyA_rzMF1mKk8J6FETOa5rjrxm8uHcAeJRo",
+  authDomain: "bal-2k26.firebaseapp.com",
+  databaseURL: "https://bal-2k26-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "bal-2k26",
+  storageBucket: "bal-2k26.firebasestorage.app",
+  messagingSenderId: "817684504280",
+  appId: "1:817684504280:web:0eb1f7930b1eab6e1541ad"
+};
 
-  // 🔥 CONFIG FIREBASE (à remplacer par la tienne)
-  const firebaseConfig = {
-    apiKey: "TON_API_KEY",
-    authDomain: "TON_PROJET.firebaseapp.com",
-    databaseURL: "https://TON_PROJET-default-rtdb.firebaseio.com",
-    projectId: "TON_PROJET",
-    storageBucket: "TON_PROJET.appspot.com",
-    messagingSenderId: "XXXX",
-    appId: "XXXX"
-  };
-
+  // Initialise Firebase
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
+  // 🔐 Mot de passe pour les résultats (à changer !)
+  const RESULT_PASSWORD = "SuperBal2026";
 
-    // =========================
-    // MOT DE PASSE RESULTATS
-    // =========================
-    const RESULT_PASSWORD = "SuperVote123";
+  // 📦 Références Firebase
+  const roiRef = database.ref("votes/roi");
+  const reineRef = database.ref("votes/reine");
 
-    // =========================
-    // STOCKAGE LOCAL DES VOTES
-    // =========================
-    let votes = {
-        Alice: 0,
-        Bob: 0,
-        Charlie: 0
-    };
+  // 🔄 Synchronisation des votes en temps réel
+  roiRef.on("value", (snapshot) => {
+      window.roiVotes = snapshot.val() || {};
+  });
+  reineRef.on("value", (snapshot) => {
+      window.reineVotes = snapshot.val() || {};
+  });
 
-    // =========================
-    // SYNCHRONISATION TEMPS REEL
-    // =========================
-    database.ref("votes").on("value", (snapshot) => {
+  // 🗳️ Gestion du vote pour le Roi
+  document.getElementById("voteRoiForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="roi"]:checked');
+      if (!selected) {
+          alert("Choisis un candidat pour le Roi !");
+          return;
+      }
+      const candidate = selected.value;
+      // Vérifie si l'utilisateur a déjà voté pour le Roi
+      if (localStorage.getItem("votedRoi")) {
+          alert("Tu as déjà voté pour le Roi !");
+          return;
+      }
+      // Incrémente le vote dans Firebase
+      roiRef.child(candidate).transaction((current) => {
+          return (current || 0) + 1;
+      });
+      // Marque comme voté
+      localStorage.setItem("votedRoi", "true");
+      alert("Merci pour ton vote pour le Roi !");
+      selected.checked = false;
+  });
 
-        const data = snapshot.val();
+  // 🗳️ Gestion du vote pour la Reine
+  document.getElementById("voteReineForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="reine"]:checked');
+      if (!selected) {
+          alert("Choisis une candidate pour la Reine !");
+          return;
+      }
+      const candidate = selected.value;
+      // Vérifie si l'utilisateur a déjà voté pour la Reine
+      if (localStorage.getItem("votedReine")) {
+          alert("Tu as déjà voté pour la Reine !");
+          return;
+      }
+      // Incrémente le vote dans Firebase
+      reineRef.child(candidate).transaction((current) => {
+          return (current || 0) + 1;
+      });
+      // Marque comme voté
+      localStorage.setItem("votedReine", "true");
+      alert("Merci pour ton vote pour la Reine !");
+      selected.checked = false;
+  });
 
-        if (data) {
-            votes = data;
-        }
-
-        console.log("Votes synchronisés :", votes);
-
-    });
-
-    // =========================
-    // ENVOI DU VOTE
-    // =========================
-    document.getElementById("voteForm").addEventListener("submit", function(e) {
-
-        e.preventDefault();
-
-        // Récupère les cases cochées
-        const selected = Array.from(
-            document.querySelectorAll('input[name="vote"]:checked')
-        ).map(el => el.value);
-
-        // Vérifie qu’au moins une personne est cochée
-        if (selected.length === 0) {
-
-            alert("Choisis au moins une personne");
-            return;
-
-        }
-
-        // Ajoute les votes
-        selected.forEach(person => {
-
-            const currentVotes = votes[person] || 0;
-
-            database.ref("votes/" + person).set(currentVotes + 1);
-
-        });
-
-        // Décocher après vote
-        document.querySelectorAll('input[name="vote"]').forEach(el => {
-
-            el.checked = false;
-
-        });
-
-        alert("Merci pour ton vote !");
-
-    });
-
-    // =========================
-    // AFFICHER LES RESULTATS
-    // =========================
-    function showResults() {
-
-        const code = document.getElementById("accessCode").value;
-
-        // Vérification du mot de passe
-        if (code !== RESULT_PASSWORD) {
-
-            alert("Code incorrect !");
-            return;
-
-        }
-
-        // Affichage des votes
-        document.getElementById("resultsContent").innerHTML = `
-            <p>Alice : <strong>${votes.Alice || 0}</strong> votes</p>
-            <p>Bob : <strong>${votes.Bob || 0}</strong> votes</p>
-            <p>Charlie : <strong>${votes.Charlie || 0}</strong> votes</p>
-        `;
-
-    }
-
+  // 📊 Affichage des résultats
+  function showResults() {
+      const code = document.getElementById("accessCode").value;
+      if (code !== RESULT_PASSWORD) {
+          alert("Code incorrect !");
+          return;
+      }
+      const roiVotes = window.roiVotes || {};
+      const reineVotes = window.reineVotes || {};
+      let html = "<h3>Roi</h3>";
+      for (const [candidate, votes] of Object.entries(roiVotes)) {
+          html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
+      }
+      html += "<h3>Reine</h3>";
+      for (const [candidate, votes] of Object.entries(reineVotes)) {
+          html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
+      }
+      document.getElementById("resultsContent").innerHTML = html;
+  }
 </script>
 
 </body>
