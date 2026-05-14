@@ -51,12 +51,24 @@
     <h2>Vote pour le Roi</h2>
     <form id="voteRoiForm">
         <p>Choisis ton candidat :</p>
-        <input type="radio" id="roiARFAOUI Sacha" name="roi" value="ARFAOUI Sacha">
-        <label for="roiARFAOUI Sacha">ARFAOUI Sacha</label><br>
-        <input type="radio" id="roiBob" name="roi" value="Bob">
-        <label for="roiBob">Bob</label><br>
-        <input type="radio" id="roiCharlie" name="roi" value="Charlie">
-        <label for="roiCharlie">Charlie</label><br><br>
+
+<div id="listeRois"></div>
+
+<script>
+const noms = ["ARFAOUI Sacha",, "BAUER solal",, "BEKER louis",, "BELLINI flavien",, "BEURDELEY julien",, "BODEAU-LIVINEC étienne",, "BOUCHENEB ludovic",, "BOYER Florian",, "CAVAGNE Léandre",, "CHANTEREAULT matis",, "CHASLERIES ryan",, "CHERMETTE grégoire",, "CHOURROT Félicité",, "COLAS paul",, "CUZIAT philémon",, "DAUBAS simon",, "DE OLIVEIRA lucas",, "DE ROBERT florian",, "DEFAIX Nolan",, "DEVOS florian",, "DORIGNAC maxime",, "DOUX lino",, "ECHES anatole",, "EL BEKALI ryad",, "FLAMEZ-PUCHOIS gabin",, "GARDE LEBRETON théophile",, "GRAVIER maël",, "HEBERT thomas",, "JOURDAN Thomas",, "LABOS alexandre",, "LAISNEY robin",, "LANÇON aurélien",, "LE NIVET martin",, "LEJAY LOREAU léonard",, "MALAKOF Sacha",, "MARCAIS Thibault",, "MARTEL lorenzo",, "MAUSSANG Carl-Owen",, "MIDEY Eliot",, "MOREAU Oscar",, "PENAUD Maxime",, "PIERROT Mathis",, "POTART Pierre",, "REYE Clément",, "ROSSIGNOL hugo",, "RUTILLET guillaume",, "SAINTON léo",, "SALDANA nolan",, "SANCHEZ adam",, "SEBBAR manyl",, "SENGOUTTOUVANE yuvaraj",, "SOROUR Aladdin",, "STANISIC alexandre",, "STOCK johan",, "TROUILLET evan",, "VASSEUR paul",, "VEYRAT-MASSON hadrien",, "WIESENDANGER raphaël",
+];
+
+const container = document.getElementById("listeRois");
+
+noms.forEach(nom => {
+    container.innerHTML += `
+        <input type="radio" id="roi${nom}" name="roi" value="${nom}">
+        <label for="roi${nom}">${nom}</label><br><br>
+    `;
+});
+</script>
+        
+
         <button type="submit">Voter pour le Roi</button>
     </form>
 </div>
@@ -66,12 +78,29 @@
     <h2>Vote pour la Reine</h2>
     <form id="voteReineForm">
         <p>Choisis ta candidate :</p>
-        <input type="radio" id="reineAlice" name="reine" value="Alice">
-        <label for="reineAlice">Alice</label><br>
-        <input type="radio" id="reineBob" name="reine" value="Bob">
-        <label for="reineBob">Bob</label><br>
-        <input type="radio" id="reineCharlie" name="reine" value="Charlie">
-        <label for="reineCharlie">Charlie</label><br><br>
+    
+<div id="listeReines"></div>
+
+<script>
+    const reines = [
+        "AKOPOV jeanne",, "AUBRY elena",, "BALDACCI line",, "BAUDURET camille",, "BENNI graziella",, "BERTAZZON elisa",, "BOËLLE océlia",, "BORNE elena",, "BOUSQUET miki",, "CASSETARI--HOANG lucille",, "CAZALON chloé",, "CHAMMAH elisa",, "CHAMOUTON laurène",, "CHANIER laure",, "DE KERSAUSON marine",, "DESTAILLEUR ella",, "DONG cloée",, "FERLICOT sibylle",, "FORNAL constance",, "FREHEL éléonore",, "FULMINET agathe",, "GAINZA juliette",, "GUENDOUZEN jade",, "GUILLEMOT emma",, "HAFLIGER élodie",, "HAVARD marie",, "HOFFNUNG clémence",, "JAMET adèle",, "JEROME capucine",, "KAJTAZ sarah",, "KASSER héloïse",, "KOUKANE mirass",, "LABLANCHY clara",, "LABOURDETTE lucie",, "LAHACHE loïs",, "LAVIGNE lise",, "LE FOURN lucie",, "LOPIN honorine",, "MAGINOT lisa",, "MASEDA pénélope",, "MOIOLI hanna",, "MOREIRA luna",, "OHNONA tal",, "PACHOT charline",, "PADELLEC iris",, "PICASSO léna",, "PICASSO victoria",, "QUINTELA isis",, "RAABE romane",, "RICHARD julie",, "RIPOLL-FERRU julie",, "ROLNIN nayah",, "ROY louise",, "SCHMIT mathilde",, "TAOUGANI sana",, "THIODAT solène",, "THIOLLAY fannie",, "TOUENTI ines",, "VALLAT philomène",, "VARLET élodie",
+    ];
+
+    const containerReines = document.getElementById("listeReines");
+
+    reines.forEach(reine => {
+        containerReines.innerHTML += `
+            <input type="radio" id="reine${reine}" name="reine" value="${reine}">
+            <label for="reine${reine}">${reine}</label><br><br>
+        `;
+    });
+</script>
+
+
+        <div id="listeReines"></div>
+
+
+
         <button type="submit">Voter pour la Reine</button>
     </form>
 </div>
