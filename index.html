@@ -103,7 +103,7 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  // 🔐 Mot de passe pour les résultats (à changer !)
+  // 🔐 Mot de passe pour les résultats
   const RESULT_PASSWORD = "SuperBal2026";
 
   // 📦 Références Firebase
@@ -111,11 +111,17 @@ const firebaseConfig = {
   const reineRef = database.ref("votes/reine");
 
   // 🔄 Synchronisation des votes en temps réel
+  let roiVotes = {};
+  let reineVotes = {};
+
   roiRef.on("value", (snapshot) => {
-      window.roiVotes = snapshot.val() || {};
+      roiVotes = snapshot.val() || {};
+      console.log("Votes Roi:", roiVotes);
   });
+
   reineRef.on("value", (snapshot) => {
-      window.reineVotes = snapshot.val() || {};
+      reineVotes = snapshot.val() || {};
+      console.log("Votes Reine:", reineVotes);
   });
 
   // 🗳️ Gestion du vote pour le Roi
@@ -127,16 +133,13 @@ const firebaseConfig = {
           return;
       }
       const candidate = selected.value;
-      // Vérifie si l'utilisateur a déjà voté pour le Roi
       if (localStorage.getItem("votedRoi")) {
           alert("Tu as déjà voté pour le Roi !");
           return;
       }
-      // Incrémente le vote dans Firebase
       roiRef.child(candidate).transaction((current) => {
           return (current || 0) + 1;
       });
-      // Marque comme voté
       localStorage.setItem("votedRoi", "true");
       alert("Merci pour ton vote pour le Roi !");
       selected.checked = false;
@@ -151,16 +154,13 @@ const firebaseConfig = {
           return;
       }
       const candidate = selected.value;
-      // Vérifie si l'utilisateur a déjà voté pour la Reine
       if (localStorage.getItem("votedReine")) {
           alert("Tu as déjà voté pour la Reine !");
           return;
       }
-      // Incrémente le vote dans Firebase
       reineRef.child(candidate).transaction((current) => {
           return (current || 0) + 1;
       });
-      // Marque comme voté
       localStorage.setItem("votedReine", "true");
       alert("Merci pour ton vote pour la Reine !");
       selected.checked = false;
@@ -173,8 +173,6 @@ const firebaseConfig = {
           alert("Code incorrect !");
           return;
       }
-      const roiVotes = window.roiVotes || {};
-      const reineVotes = window.reineVotes || {};
       let html = "<h3>Roi</h3>";
       for (const [candidate, votes] of Object.entries(roiVotes)) {
           html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
