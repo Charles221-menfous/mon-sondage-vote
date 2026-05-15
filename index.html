@@ -10,19 +10,32 @@
         max-width: 600px;
         margin: 0 auto;
         background-color: coral;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
 
-    }
+            color: white;
+            font-family: Arial, sans-serif;
+
+        }
+
+        /* Création des étoiles */
+
+
+
+
+
     .vote-section {
         margin-bottom: 30px;
         padding: 15px;
         border: 1px solid #ddd;
         border-radius: 5px;
+        z-index: 2;
     }
     .results {
         margin-top: 20px;
         padding: 15px;
         background: #f0f0f0;
         border-radius: 5px;
+        z-index: 2;
     }
     button {
         padding: 8px 15px;
@@ -31,30 +44,119 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        z-index: 2;
     }
     button:hover {
         background: #45a049;
     }
     input[type="radio"] {
         margin-right: 10px;
+        z-index: 2;
     }
     #resultsContent p {
         margin: 5px 0;
+        z-index: 2;
     }
 
     .reini{
 padding: 40px;
 margin: 40px;
+z-index: 2;
 
     }
 
+ canvas {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+        display: block;
+        background: radial-gradient(ellipse at bottom, #0b0f1a 0%, #000 100%);
+        z-index: -5;
+    }
+    
+    
 </style>
 </head>
 <body>
 
 <h1>Vote pour le Roi et la Reine du Bal</h1>
 
-<!-- Section Vote Roi -->
+
+<canvas id="sky"></canvas>
+
+<script>
+const canvas = document.getElementById("sky");
+const ctx = canvas.getContext("2d");
+
+
+canvas.width = window.innerWidth;
+canvas.height = 5320; 
+
+let stars = [];
+
+class Star {
+    constructor() {
+        this.reset();
+    }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speed = Math.random() * 2 + 0.5; 
+        this.trail = []; 
+        this.trailLength = 10; 
+    }
+    update() {
+        this.trail.push({x: this.x, y: this.y});
+        if (this.trail.length > this.trailLength) {
+            this.trail.shift();
+        }
+
+        this.x += this.speed;
+
+        if (this.x > canvas.width + this.size) {
+            this.reset();
+            this.x = -this.size;
+        }
+    }
+    draw() {
+        for (let i = 0; i < this.trail.length; i++) {
+            let opacity = i / this.trail.length;
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.trail[i].x, this.trail[i].y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 100; i++) {
+    stars.push(new Star());
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let star of stars) {
+        star.update();
+        star.draw();
+    }
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = 5320;
+});
+</script>
+
+
 <div class="vote-section">
     <h2>Vote pour le Roi</h2>
     <form id="voteRoiForm">
@@ -81,7 +183,6 @@ noms.forEach(nom => {
     </form>
 </div>
 
-<!-- Section Vote Reine -->
 <div class="vote-section">
     <h2>Vote pour la Reine</h2>
     <form id="voteReineForm">
@@ -113,7 +214,6 @@ noms.forEach(nom => {
     </form>
 </div>
 
-<!-- Section Résultats -->
 <div class="results">
     <h2>Résultats</h2>
     <input type="password" id="accessCode" placeholder="Entrez le code">
@@ -134,10 +234,10 @@ function demanderCode() {
     }
 
 localStorage.removeItem("votedReine");
-    localStorage.getItem(votedReine");
+    localStorage.getItem("votedReine");
 
     localStorage.removeItem("votedRoi");
-    localStorage.getItem(votedRoi");
+    localStorage.getItem("votedRoi");
     
     
     // 🔥 Firebase reset
