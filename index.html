@@ -7,7 +7,7 @@
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
-        max-width: 600px;
+        max-width: 95%;
         margin: 0 auto;
         background-color: coral;
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
@@ -20,7 +20,15 @@
         /* Création des étoiles */
 
 
+h1{
+text-align: center;
 
+}
+
+h2{
+text-align: center;
+
+}
 
 
     .vote-section {
@@ -36,6 +44,7 @@
         background: #f0f0f0;
         border-radius: 5px;
         z-index: 2;
+                background-color: #1b2735;;
     }
     button {
         padding: 8px 15px;
@@ -45,6 +54,8 @@
         border-radius: 4px;
         cursor: pointer;
         z-index: 2;
+
+
     }
     button:hover {
         background: #45a049;
@@ -56,6 +67,7 @@
     #resultsContent p {
         margin: 5px 0;
         z-index: 2;
+
     }
 
     .reini{
@@ -221,38 +233,6 @@ noms.forEach(nom => {
     <div id="resultsContent"></div>
 </div>
 
-<button class="reini" onclick="demanderCode()">Réinitialiser les votes</button>
-
-<script>
-function demanderCode() {
-
-    const code = prompt("Entrez le code secret :");
-
-    if (code !== "1234") {
-        alert("Code incorrect.");
-        return;
-    }
-
-localStorage.removeItem("votedReine");
-    localStorage.getItem("votedReine");
-
-    localStorage.removeItem("votedRoi");
-    localStorage.getItem("votedRoi");
-    
-    
-    // 🔥 Firebase reset
-    votesRef.remove();
-
-    // 🧹 suppression TOTALE du navigateur
-    localStorage.clear();
-
-    // 🧼 reset affichage
-    document.getElementById("resultsContent").innerHTML = "";
-
-    // 🔄 force reset total JS
-    location.reload();
-}
-</script>
 
 
 <!-- Firebase SDK -->
