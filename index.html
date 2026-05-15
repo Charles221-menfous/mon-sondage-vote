@@ -9,7 +9,7 @@
         margin: 20px;
         max-width: 600px;
         margin: 0 auto;
-        background-color: yellow;
+        background-color: orange;
 
     }
     .vote-section {
@@ -215,28 +215,37 @@ document.getElementById("voteRoiForm").addEventListener("submit", function(e) {
 });
 
 
-    
+    // Sélection vote Reine
 
-  // Dans la gestion du vote pour le Roi
 document.getElementById("voteReineForm").addEventListener("submit", function(e) {
+
     e.preventDefault();
+
     const selected = document.querySelector('input[name="reine"]:checked');
+
     if (!selected) {
-        alert("Choisis un candidat pour le Reine !");
+        alert("Choisis une candidate pour la Reine !");
         return;
     }
+
     const candidate = selected.value;
-    console.log("Envoi du vote pour le Reine :", candidate); // <-- Ajoute ça
+
+    // Vérifie si déjà voté
     if (localStorage.getItem("votedReine") === "true") {
-        alert("Tu as déjà voté pour le Reine !");
+        alert("Tu as déjà voté pour la Reine !");
         return;
     }
-    roiRef.child(candidate).transaction((current) => {
-        console.log("Transaction pour", candidate, ":", current, "->", (current || 0) + 1); // <-- Ajoute ça
+
+    // 🔥 IMPORTANT : reineRef
+    reineRef.child(candidate).transaction((current) => {
         return (current || 0) + 1;
     });
+
+    // Sauvegarde locale
     localStorage.setItem("votedReine", "true");
-    alert("Merci pour ton vote pour le Reine !");
+
+    alert("Merci pour ton vote pour la Reine !");
+
     selected.checked = false;
 });
 
