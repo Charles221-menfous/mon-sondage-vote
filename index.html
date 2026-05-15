@@ -200,27 +200,36 @@ const firebaseConfig = {
 
 // Dans la gestion du vote pour le Roi
 document.getElementById("voteRoiForm").addEventListener("submit", function(e) {
+
     e.preventDefault();
+
     const selected = document.querySelector('input[name="roi"]:checked');
+
     if (!selected) {
         alert("Choisis un candidat pour le Roi !");
         return;
     }
+
     const candidate = selected.value;
-    console.log("Envoi du vote pour le Roi :", candidate); // <-- Ajoute ça
-  if (localStorage.getItem("votedROI") === "true") {
+
+    // 🔒 Vérifie si déjà voté
+    if (localStorage.getItem("votedRoi") === "true") {
         alert("Tu as déjà voté pour le Roi !");
         return;
     }
+
+    // 🔥 Ajoute le vote Firebase
     roiRef.child(candidate).transaction((current) => {
-        console.log("Transaction pour", candidate, ":", current, "->", (current || 0) + 1); // <-- Ajoute ça
         return (current || 0) + 1;
     });
+
+    // 🔒 Sauvegarde le vote
     localStorage.setItem("votedRoi", "true");
+
     alert("Merci pour ton vote pour le Roi !");
+
     selected.checked = false;
 });
-
 
     // Sélection vote Reine
 
