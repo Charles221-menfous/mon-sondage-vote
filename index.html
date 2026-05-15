@@ -86,12 +86,84 @@ z-index: 2;
         z-index: -5;
     }
     
+
+    .rules{
+display: flex;
+justify-content: space-around;
+    }
     
+    .bl{
+height: 200px;
+width: 1px;
+background-color: #f0f0f0;
+
+
+    }
+
+h3{
+margin: 40px;
+padding: 40px;
+
+top: 50px; left: 800px;
+text-align: center;
+
+    border:4px solid white;
+
+    box-shadow:
+        0 0 10px white,
+        0 0 25px white;
+
+    border-radius:10px;
+
+}
+
+@keyframes float{
+
+    0%{
+        transform:
+            translateX(-50%)
+            rotate(-12deg)
+            translateY(0px);
+    }
+
+    50%{
+        transform:
+            translateX(-50%)
+            rotate(-12deg)
+            translateY(-15px);
+    }
+
+    100%{
+        transform:
+            translateX(-50%)
+            rotate(-12deg)
+            translateY(0px);
+    }
+}
+
+
+
+
+
+
 </style>
 </head>
 <body>
 
 <h1>Vote pour le Roi et la Reine du Bal</h1>
+
+
+
+
+ <div  ><h3>
+    Pour voter, cochez la case à coté du/de la candidat(e) <br> pour qui vous souhaitez votez, <br> puis aller cliquez sur "Voter pour le/la Roi/Reine" en bas de la colonne.
+    <br><br> Vous ne pouvez votez pour qu'un seul candidat  <br> pour le roi, et qu'une seule pour la Reine
+   <br> <br> Merci de ne pas essayer d'aller voir les résultats <br>  (De toute façon il y a que les admins qui ont le code)
+ </h3></div>
+
+
+
+
 
 
 <canvas id="sky"></canvas>
@@ -169,7 +241,7 @@ window.addEventListener("resize", () => {
 </script>
 
 
-<div class="vote-section">
+<div  class="vote-section">
     <h2>Vote pour le Roi</h2>
     <form id="voteRoiForm">
         <p>Choisis ton candidat :</p>
