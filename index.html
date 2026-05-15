@@ -9,7 +9,7 @@
         margin: 20px;
         max-width: 600px;
         margin: 0 auto;
-        background-color: orange;
+        background-color: coral;
 
     }
     .vote-section {
@@ -133,6 +133,13 @@ function demanderCode() {
         return;
     }
 
+localStorage.removeItem("votedReine");
+    localStorage.getItem(votedReine");
+
+    localStorage.removeItem("votedRoi");
+    localStorage.getItem(votedRoi");
+    
+    
     // 🔥 Firebase reset
     votesRef.remove();
 
@@ -251,22 +258,37 @@ document.getElementById("voteReineForm").addEventListener("submit", function(e) 
 
     
   // 📊 Affichage des résultats
-  function showResults() {
-      const code = document.getElementById("accessCode").value;
-      if (code !== RESULT_PASSWORD) {
-          alert("Code incorrect !");
-          return;
-      }
-      let html = "<h3>Roi</h3>";
-      for (const [candidate, votes] of Object.entries(roiVotes)) {
-          html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
-      }
-      html += "<h3>Reine</h3>";
-      for (const [candidate, votes] of Object.entries(reineVotes)) {
-          html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
-      }
-      document.getElementById("resultsContent").innerHTML = html;
-  }
+function showResults() {
+
+    const code = document.getElementById("accessCode").value;
+
+    if (code !== RESULT_PASSWORD) {
+        alert("Code incorrect !");
+        return;
+    }
+
+    let html = "<h3>Roi</h3>";
+
+    // 🔥 Tri des votes Roi
+    const sortedRoi = Object.entries(roiVotes)
+        .sort((a, b) => b[1] - a[1]);
+
+    sortedRoi.forEach(([candidate, votes]) => {
+        html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
+    });
+
+    html += "<h3>Reine</h3>";
+
+    // 🔥 Tri des votes Reine
+    const sortedReine = Object.entries(reineVotes)
+        .sort((a, b) => b[1] - a[1]);
+
+    sortedReine.forEach(([candidate, votes]) => {
+        html += `<p>${candidate} : <strong>${votes}</strong> votes</p>`;
+    });
+
+    document.getElementById("resultsContent").innerHTML = html;
+}
 </script>
 
 </body>
